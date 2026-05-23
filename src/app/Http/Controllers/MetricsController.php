@@ -2,50 +2,187 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CacheMetric;
 use App\Models\MonitoringJob;
+use App\Models\PriceHistory;
 use App\Models\Product;
+use App\Services\RequestMetricsService;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redis;
 use Inertia\Inertia;
 use Inertia\Response;
+use Illuminate\Support\Facades\Artisan;
 
 class MetricsController extends Controller
 {
     public function index(): Response
     {
-        $cacheHits = CacheMetric::sum('hits');
+        /*
+        |--------------------------------------------------------------------------
+        | Request Metrics
+        |--------------------------------------------------------------------------
+        */
 
-        $cacheMisses = CacheMetric::sum('misses');
+        $requestMetrics =
+            RequestMetricsService::stats();
 
-        $cacheHitRate = 0;
+        /*
+        |--------------------------------------------------------------------------
+        | Queue Metrics
+        |--------------------------------------------------------------------------
+        */
 
-        if (($cacheHits + $cacheMisses) > 0) {
-            $cacheHitRate = round(
-                ($cacheHits / ($cacheHits + $cacheMisses)) * 100
-            );
-        }
+        $queueMetrics = [
 
-        $failedJobs = MonitoringJob::query()
-            ->where('status', 'failed')
-            ->count();
+            'failed_jobs' =>
+                DB::table('failed_jobs')->count(),
 
-        $metrics = [
-            'total_requests' => rand(1000, 5000),
+            'completed_jobs' =>
+                MonitoringJob::query()
+                    ->where('status', 'completed')
+                    ->count(),
 
-            'avg_response_time' => rand(80, 300),
-
-            'cache_hit_rate' => $cacheHitRate,
-
-            'failed_jobs' => $failedJobs,
+            'failed_monitoring_jobs' =>
+                MonitoringJob::query()
+                    ->where('status', 'failed')
+                    ->count(),
         ];
 
-        $cacheMetrics = CacheMetric::query()
-            ->latest()
-            ->paginate(10)
-            ->withQueryString();
+        /*
+        |--------------------------------------------------------------------------
+        | Scraping Metrics
+        |--------------------------------------------------------------------------
+        */
 
-        return Inertia::render('metrics/Index', [
-            'metrics' => $metrics,
-            'cache_metrics' => $cacheMetrics,
-        ]);
+        $totalMonitoringJobs =
+            MonitoringJob::query()->count();
+
+        $successfulMonitoringJobs =
+            MonitoringJob::query()
+                ->where('status', 'completed')
+                ->count();
+
+        $successRate =
+            $totalMonitoringJobs > 0
+
+                ? round(
+                (
+                    $successfulMonitoringJobs
+                    / $totalMonitoringJobs
+                ) * 100,
+                2
+            )
+
+                : 0;
+
+        $scrapingMetrics = [
+
+            'products_monitored' =>
+                Product::query()
+                    ->where('is_active', true)
+                    ->count(),
+
+            'price_checks' =>
+                PriceHistory::query()->count(),
+
+            'success_rate' =>
+                $successRate,
+
+            'last_successful_check' =>
+                MonitoringJob::query()
+
+                    ->where('status', 'completed')
+
+                    ->latest('finished_at')
+
+                    ->value('finished_at'),
+        ];
+
+        /*
+        |--------------------------------------------------------------------------
+        | System Health
+        |--------------------------------------------------------------------------
+        */
+
+        $systemHealth = [
+
+            'database' => $this->databaseHealth(),
+
+            'redis' => $this->redisHealth(),
+
+            'horizon' => $this->horizonHealth(),
+        ];
+
+        return Inertia::render(
+            'metrics/Index',
+
+            [
+
+                'request_metrics' =>
+                    $requestMetrics,
+
+                'queue_metrics' =>
+                    $queueMetrics,
+
+                'scraping_metrics' =>
+                    $scrapingMetrics,
+
+                'system_health' =>
+                    $systemHealth,
+            ]
+        );
+    }
+
+    private function databaseHealth(): string
+    {
+        try {
+
+            DB::select('SELECT 1');
+
+            return 'OK';
+
+        } catch (\Throwable) {
+
+            return 'ERROR';
+        }
+    }
+
+    private function redisHealth(): string
+    {
+        try {
+
+            Redis::ping();
+
+            return 'OK';
+
+        } catch (\Throwable) {
+
+            return 'ERROR';
+        }
+    }
+
+    private function horizonHealth(): string
+    {
+        try {
+
+            Artisan::call('horizon:status');
+
+            $output = Artisan::output();
+
+            if (
+                str_contains(
+                    $output,
+                    'Horizon is running'
+                )
+            ) {
+
+                return 'OK';
+            }
+
+            return 'STOPPED';
+
+        } catch (\Throwable) {
+
+            return 'ERROR';
+        }
     }
 }
