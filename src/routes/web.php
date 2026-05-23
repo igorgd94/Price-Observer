@@ -21,7 +21,6 @@ Route::get('/metrics', [MetricsController::class, 'index'])
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->name('dashboard');
 
-Route::inertia('/', 'Welcome')->name('home');
 
 Route::prefix('products')
     ->controller(ProductController::class)
