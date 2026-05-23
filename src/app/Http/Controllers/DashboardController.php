@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CacheMetric;
 use App\Models\MonitoringJob;
 use App\Models\Product;
 use Inertia\Inertia;

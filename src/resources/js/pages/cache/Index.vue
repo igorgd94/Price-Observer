@@ -1,11 +1,10 @@
 <script setup>
-import Pagination from '@/components/Pagination.vue'
 import StatCard from '@/components/StatCard.vue'
 import CardGrid from '@/components/CardGrid.vue'
 
 defineProps({
     metrics: Object,
-    cache_metrics: Object,
+    cache_metrics: Array,
 })
 
 function formatDate(date) {
@@ -29,6 +28,23 @@ function calculateHitRate(metric) {
     }
 
     return `${Math.round((metric.hits / total) * 100)}%`
+}
+
+function formatTTL(ttl) {
+
+    if (ttl === null || ttl < 0) {
+        return '-'
+    }
+
+    const minutes = Math.floor(ttl / 60)
+
+    const seconds = ttl % 60
+
+    if (minutes <= 0) {
+        return `${seconds}s`
+    }
+
+    return `${minutes}m ${seconds}s`
 }
 </script>
 
@@ -114,6 +130,10 @@ function calculateHitRate(metric) {
                     </th>
 
                     <th class="text-left px-6 py-4">
+                        TTL
+                    </th>
+
+                    <th class="text-left px-6 py-4">
                         Último Hit
                     </th>
 
@@ -124,13 +144,13 @@ function calculateHitRate(metric) {
                 <tbody>
 
                 <tr
-                    v-for="metric in cache_metrics.data"
-                    :key="metric.id"
+                    v-for="metric in cache_metrics"
+                    :key="metric.key"
                     class="border-b hover:bg-gray-50"
                 >
 
-                    <td class="px-6 py-4 font-medium">
-                        {{ metric.key_name }}
+                    <td class="px-6 py-4 font-medium text-sm">
+                        {{ metric.key }}
                     </td>
 
                     <td class="px-6 py-4">
@@ -143,12 +163,16 @@ function calculateHitRate(metric) {
 
                     <td class="px-6 py-4">
 
-                            <span
-                                class="px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-700"
-                            >
-                                {{ calculateHitRate(metric) }}
-                            </span>
+                        <span
+                            class="px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-700"
+                        >
+                            {{ calculateHitRate(metric) }}
+                        </span>
 
+                    </td>
+
+                    <td class="px-6 py-4 text-gray-500">
+                        {{ formatTTL(metric.ttl) }}
                     </td>
 
                     <td class="px-6 py-4 text-gray-500">
@@ -162,8 +186,6 @@ function calculateHitRate(metric) {
             </table>
 
         </div>
-
-        <Pagination :links="cache_metrics.links" />
 
     </div>
 

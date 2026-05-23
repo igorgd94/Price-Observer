@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CacheMetric;
+use App\Services\CacheMetricsService;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -10,42 +10,25 @@ class CacheController extends Controller
 {
     public function index(): Response
     {
-        $totalHits = CacheMetric::sum('hits');
+        $stats = CacheMetricsService::stats();
 
-        $totalMisses = CacheMetric::sum('misses');
-
-        $hitRate = 0;
-
-        if (($totalHits + $totalMisses) > 0) {
-            $hitRate = round(
-                ($totalHits / ($totalHits + $totalMisses)) * 100
-            );
-        }
-
-        $lastHit = CacheMetric::query()
-            ->latest('last_hit_at')
-            ->value('last_hit_at');
-
-        $metrics = [
-
-            'total_hits' => $totalHits,
-
-            'total_misses' => $totalMisses,
-
-            'hit_rate' => $hitRate,
-
-            'keys_count' => CacheMetric::count(),
-
-            'last_hit_at' => $lastHit,
-        ];
-
-        $cacheMetrics = CacheMetric::query()
-            ->latest('last_hit_at')
-            ->paginate(10)
-            ->withQueryString();
+        $cacheMetrics = CacheMetricsService::keys();
 
         return Inertia::render('cache/Index', [
-            'metrics' => $metrics,
+
+            'metrics' => [
+
+                'total_hits' => $stats['hits'],
+
+                'total_misses' => $stats['misses'],
+
+                'hit_rate' => $stats['hit_rate'],
+
+                'keys_count' => $stats['total_keys'],
+
+                'last_hit_at' => $stats['last_hit_at'],
+            ],
+
             'cache_metrics' => $cacheMetrics,
         ]);
     }

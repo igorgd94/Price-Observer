@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Jobs\MonitorProductJob;
 use App\Models\Product;
+use App\Support\CacheKeys;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -85,11 +86,33 @@ class ProductController extends Controller
 
         if (Cache::has($cacheKey)) {
 
-            Cache::increment('metrics.cache.hits');
+            Cache::increment(
+                CacheKeys::totalHits()
+            );
+
+            Cache::increment(
+                CacheKeys::keyHits($cacheKey)
+            );
+
+            Cache::put(
+                CacheKeys::keyLastHitAt($cacheKey),
+                now()->toDateTimeString()
+            );
+
+            Cache::put(
+                CacheKeys::lastHitAt(),
+                now()->toDateTimeString()
+            );
 
         } else {
 
-            Cache::increment('metrics.cache.misses');
+            Cache::increment(
+                CacheKeys::totalMisses()
+            );
+
+            Cache::increment(
+                CacheKeys::keyMisses($cacheKey)
+            );
         }
 
         /*
