@@ -146,6 +146,8 @@
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/web-auth/webauthn-lib" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/webmozart/assert" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/_laravel_idea" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/laravel/horizon" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/laravel/sentinel" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

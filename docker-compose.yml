@@ -36,3 +36,19 @@ services:
     container_name: redis
     ports:
       - "6379:6379"
+
+  horizon:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+
+    working_dir: /var/www
+
+    command: php artisan horizon
+
+    volumes:
+      - ./src:/var/www
+
+    depends_on:
+      - redis
+      - postgres

@@ -8,6 +8,8 @@ RUN apt-get update && apt-get install -y \
     curl
 
 RUN docker-php-ext-install pdo pdo_pgsql
+RUN docker-php-ext-install pcntl
+
 
 RUN pecl install redis \
     && docker-php-ext-enable redis

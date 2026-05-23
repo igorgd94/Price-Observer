@@ -152,7 +152,7 @@ class ProductController extends Controller
 
                             'is_active' => $product->is_active,
 
-                            'last_checked_at' => $product->last_checked_at->toISOString(),
+                            'last_checked_at' => $product->last_checked_at ? $product->last_checked_at->toISOString() : null,
 
                             'created_at' => $product->created_at->toISOString(),
                         ])
@@ -231,7 +231,7 @@ class ProductController extends Controller
         $product = Product::create([
             ...$validated,
 
-            'user_id' => auth()->id(),
+            'user_id' => null,
 
             'current_price' => null,
 

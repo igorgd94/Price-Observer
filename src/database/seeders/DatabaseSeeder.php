@@ -12,7 +12,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
 //            ProductSeeder::class,
 //            MonitoringJobSeeder::class,
-            CacheMetricSeeder::class,
+//            CacheMetricSeeder::class,
 //            PriceHistorySeeder::class,
         ]);
     }
