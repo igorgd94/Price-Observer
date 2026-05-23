@@ -33,9 +33,14 @@ function destroyProduct(id) {
 
             <div>
 
-                <h1 class="text-3xl font-bold">
+                <a
+                    :href="product.url"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-3xl font-bold"
+                >
                     {{ product.name }}
-                </h1>
+                </a>
 
                 <p class="text-gray-500">
                     {{ product.source }}
