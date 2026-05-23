@@ -7,6 +7,7 @@ use App\Models\MonitoringJob;
 use App\Models\Product;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Services\CacheMetricsService;
 
 class DashboardController extends Controller
 {
@@ -16,17 +17,7 @@ class DashboardController extends Controller
 
         $jobsProcessed = MonitoringJob::count();
 
-        $cacheHits = CacheMetric::sum('hits');
-
-        $cacheMisses = CacheMetric::sum('misses');
-
-        $cacheHitRate = 0;
-
-        if (($cacheHits + $cacheMisses) > 0) {
-            $cacheHitRate = round(
-                ($cacheHits / ($cacheHits + $cacheMisses)) * 100
-            );
-        }
+        $cacheHitRate = CacheMetricsService::stats()['hit_rate'];
 
         $recentProducts = Product::query()
             ->where('last_checked_at', '>=', now()->subDay())

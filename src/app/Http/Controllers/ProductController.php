@@ -18,10 +18,16 @@ class ProductController extends Controller
         $query = Product::query();
 
         if (request('search')) {
-            $query->where('name', 'like', '%' . request('search') . '%');
+
+            $query->where(
+                'name',
+                'like',
+                '%' . request('search') . '%'
+            );
         }
 
         if (request('status')) {
+
             $query->where(
                 'is_active',
                 request('status') === 'active'
@@ -47,7 +53,50 @@ class ProductController extends Controller
 
         $perPage = 10;
 
-        $cacheKey = "products.page.{$page}";
+        /*
+        |--------------------------------------------------------------------------
+        | Cache Key
+        |--------------------------------------------------------------------------
+        |
+        | Incluímos filtros no cache key para evitar:
+        | - páginas misturadas
+        | - filtros incorretos
+        | - ordenações erradas
+        |
+        */
+
+        $cacheKey = sprintf(
+            'products.page.%s.search.%s.status.%s.sort.%s',
+
+            $page,
+
+            request('search', 'none'),
+
+            request('status', 'all'),
+
+            request('sort', 'latest'),
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Cache Metrics
+        |--------------------------------------------------------------------------
+        */
+
+        if (Cache::has($cacheKey)) {
+
+            Cache::increment('metrics.cache.hits');
+
+        } else {
+
+            Cache::increment('metrics.cache.misses');
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Cache
+        |--------------------------------------------------------------------------
+        */
 
         $cached = Cache::remember(
 
@@ -55,21 +104,54 @@ class ProductController extends Controller
 
             now()->addMinutes(10),
 
-            function () use ($perPage) {
+            function () use ($query, $perPage) {
 
-                $products = Product::query()
-                    ->latest()
+                $products = $query
                     ->paginate($perPage);
 
                 return [
-                    'items' => $products->items(),
+
+                    'items' => collect($products->items())
+
+                        ->map(fn ($product) => [
+
+                            'id' => $product->id,
+
+                            'name' => $product->name,
+
+                            'source' => $product->source,
+
+                            'url' => $product->url,
+
+                            'target_price' => $product->target_price,
+
+                            'current_price' => $product->current_price,
+
+                            'is_active' => $product->is_active,
+
+                            'last_checked_at' => $product->last_checked_at->toISOString(),
+
+                            'created_at' => $product->created_at->toISOString(),
+                        ])
+
+                        ->toArray(),
+
                     'total' => $products->total(),
+
                     'per_page' => $products->perPage(),
+
                     'current_page' => $products->currentPage(),
+
                     'last_page' => $products->lastPage(),
                 ];
             }
         );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Rebuild Paginator
+        |--------------------------------------------------------------------------
+        */
 
         $products = new LengthAwarePaginator(
 
@@ -88,11 +170,15 @@ class ProductController extends Controller
         );
 
         return Inertia::render('products/Index', [
+
             'products' => $products,
 
             'filters' => [
+
                 'search' => request('search'),
+
                 'status' => request('status'),
+
                 'sort' => request('sort'),
             ],
         ]);
