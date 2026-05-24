@@ -203,27 +203,49 @@ Grafana dashboards are still being refined
 # Roadmap
 
 ## Observability
+
  O Runtime metrics
+ 
  O Redis cache metrics
+ 
  O Horizon integration
+ 
  O Prometheus exporter
- X Advanced Grafana dashboards
+ 
+ O Advanced Grafana dashboards
+ 
  X Alert system
+ 
  X Centralized logging
+ 
 ## Monitoring
+
  O Scheduled jobs
+ 
  O Queue processing
+ 
  X Real scraping implementation
+ 
  X Multi-source monitoring
+ 
  X Notification pipeline
+ 
  X Price alerts
+ 
 ## Infrastructure
+
  O Dockerized environment
+ 
  O Dedicated Horizon container
+ 
  O Prometheus container
+ 
  O Grafana container
+ 
  X Redis exporter
+ 
  X PostgreSQL exporter
+ 
 
  # Screenshots
 
