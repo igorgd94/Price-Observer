@@ -111,6 +111,7 @@ At the moment, the scraping layer itself is intentionally mocked and no real scr
 The application currently follows a backend-oriented architecture with emphasis on observability and asynchronous processing.
 
 Laravel Application
+
 │
 
 ├── Redis Cache Layer
