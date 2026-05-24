@@ -227,7 +227,15 @@ Grafana dashboards are still being refined
 
  # Screenshots
 
- Screenshots and Grafana dashboards will be added as the observability stack evolves.
+ <img width="1919" height="917" alt="image" src="https://github.com/user-attachments/assets/f56151dd-f1e7-4987-88e2-41a46823ff57" />
+ <img width="1913" height="919" alt="image" src="https://github.com/user-attachments/assets/5db034e7-33ec-4706-977f-d3dc134535e1" />
+ <img width="1914" height="923" alt="image" src="https://github.com/user-attachments/assets/d3134107-a263-4ba1-a07d-812c2f127f14" />
+
+
+<img width="1914" height="921" alt="image" src="https://github.com/user-attachments/assets/57c12499-f625-4057-9734-38dee268e946" />
+<img width="1919" height="915" alt="image" src="https://github.com/user-attachments/assets/2cddc959-6a3c-4b45-abbb-f299ad4c9158" />
+<img width="1915" height="916" alt="image" src="https://github.com/user-attachments/assets/460104e3-e24e-4f9a-b943-adfdb29a96d1" />
+
 
  # License
 
