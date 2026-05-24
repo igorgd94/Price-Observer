@@ -112,12 +112,19 @@ The application currently follows a backend-oriented architecture with emphasis 
 
 Laravel Application
 │
+
 ├── Redis Cache Layer
+
 ├── Queue Workers (Horizon)
+
 ├── Request Metrics Middleware
+
 ├── Cache Metrics Service
+
 ├── Prometheus Exporter
+
 └── Scheduled Monitoring Jobs
+
 
 # Metrics and Monitoring
 
