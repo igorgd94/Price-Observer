@@ -24,6 +24,14 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
+        $completedJobs = MonitoringJob::query()
+            ->where('status', 'completed')
+            ->count();
+
+        $failedJobs = MonitoringJob::query()
+            ->where('status', 'failed')
+            ->count();
+
         return Inertia::render('Dashboard', [
 
             'metrics' => [
@@ -35,6 +43,10 @@ class DashboardController extends Controller
                 'cache_hit_rate' => $cacheHitRate,
 
                 'avg_response_time' => 120,
+
+                'completed_jobs' => $completedJobs,
+
+                'failed_jobs' => $failedJobs,
             ],
 
             'recent_products' => $recentProducts,

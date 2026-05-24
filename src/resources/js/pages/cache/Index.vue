@@ -1,6 +1,8 @@
 <script setup>
 import StatCard from '@/components/StatCard.vue'
 import CardGrid from '@/components/CardGrid.vue'
+import CacheEfficiencyChart
+    from '@/components/charts/CacheEfficiencyChart.vue'
 
 defineProps({
     metrics: Object,
@@ -96,6 +98,33 @@ function formatTTL(ttl) {
             />
 
         </CardGrid>
+
+        <div class="bg-white rounded-xl shadow p-6">
+
+            <div class="flex items-center justify-between mb-6">
+
+                <div>
+
+                    <h2 class="text-xl font-bold">
+                        Cache Efficiency
+                    </h2>
+
+                    <p class="text-gray-500 text-sm mt-1">
+                        Distribuição entre cache hits e misses.
+                    </p>
+
+                </div>
+
+            </div>
+
+            <CacheEfficiencyChart
+
+                :hits="metrics.total_hits"
+
+                :misses="metrics.total_misses"
+            />
+
+        </div>
 
         <div class="bg-white rounded-xl shadow overflow-hidden">
 

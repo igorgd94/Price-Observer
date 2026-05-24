@@ -1,17 +1,27 @@
 <script setup>
 import { Link, router } from '@inertiajs/vue3'
 
+import PriceHistoryChart
+    from '@/components/charts/PriceHistoryChart.vue'
+
 defineProps({
     product: Object,
 })
 
 function formatDate(date) {
+
+    if (!date) {
+        return '--'
+    }
+
     return new Intl.DateTimeFormat('pt-BR', {
+
         day: '2-digit',
         month: '2-digit',
         year: 'numeric',
         hour: '2-digit',
         minute: '2-digit',
+
     }).format(new Date(date))
 }
 
@@ -37,7 +47,7 @@ function destroyProduct(id) {
                     :href="product.url"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="text-3xl font-bold"
+                    class="text-3xl font-bold hover:text-blue-600 transition"
                 >
                     {{ product.name }}
                 </a>
@@ -50,12 +60,12 @@ function destroyProduct(id) {
 
             <div class="flex gap-3">
 
-            <Link
-                :href="`/products/${product.id}/edit`"
-                class="bg-gray-900 text-white px-4 py-2 rounded-lg"
-            >
-                Editar
-            </Link>
+                <Link
+                    :href="`/products/${product.id}/edit`"
+                    class="bg-gray-900 text-white px-4 py-2 rounded-lg"
+                >
+                    Editar
+                </Link>
 
                 <button
                     class="bg-red-600 text-white px-4 py-2 rounded-lg"
@@ -101,18 +111,33 @@ function destroyProduct(id) {
                 </p>
 
                 <p class="text-lg">
-                    {{ formatDate(product.last_checked_at) ?? '--' }}
+                    {{ formatDate(product.last_checked_at) }}
                 </p>
 
             </div>
 
         </div>
 
-        <div class="bg-white rounded-xl shadow p-6">
+        <div class="bg-white rounded-xl shadow p-6 space-y-6">
 
-            <h2 class="text-xl font-semibold mb-4">
-                Histórico de preços
-            </h2>
+            <div class="flex items-center justify-between">
+
+                <h2 class="text-xl font-semibold">
+                    Histórico de preços
+                </h2>
+
+                <span
+                    class="text-sm text-gray-500"
+                >
+                    {{ product.price_histories.length }}
+                    registros
+                </span>
+
+            </div>
+
+            <PriceHistoryChart
+                :histories="product.price_histories"
+            />
 
             <table class="w-full text-left">
 
@@ -144,7 +169,7 @@ function destroyProduct(id) {
                         {{ formatDate(history.captured_at) }}
                     </td>
 
-                    <td class="py-3">
+                    <td class="py-3 font-medium">
                         R$ {{ history.price }}
                     </td>
 

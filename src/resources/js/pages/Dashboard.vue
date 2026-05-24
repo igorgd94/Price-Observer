@@ -1,6 +1,8 @@
 <script setup>
 import StatCard from '@/components/StatCard.vue'
 import CardGrid from "@/components/CardGrid.vue";
+import JobsActivityChart
+    from '@/components/charts/JobsActivityChart.vue'
 
 defineProps({
     metrics: Object,
@@ -39,6 +41,107 @@ function formatDate(date) {
         />
 
     </CardGrid>
+
+    <div class="
+        grid
+        mt-6
+        grid-cols-1
+        lg:grid-cols-3
+        gap-6
+        items-stretch
+    ">
+
+        <div
+            class="
+        bg-gray-50
+        rounded-xl
+        p-8
+        flex
+        flex-col
+        justify-center
+        h-full
+    "
+        >
+
+            <p class="text-sm text-gray-500 mb-2">
+                Success Rate
+            </p>
+
+            <p class="text-5xl font-bold">
+
+                {{
+                    Math.round(
+                        (
+                            metrics.completed_jobs
+                            / metrics.jobs_processed
+                        ) * 100
+                    )
+                }}%
+
+            </p>
+
+            <div class="mt-6 space-y-3">
+
+                <div class="flex items-center justify-between">
+
+                <span class="text-gray-500">
+                    Completed
+                </span>
+
+                    <span
+                        class="font-semibold text-green-600"
+                    >
+                    {{ metrics.completed_jobs }}
+                </span>
+
+                </div>
+
+                <div class="flex items-center justify-between">
+
+                <span class="text-gray-500">
+                    Failed
+                </span>
+
+                    <span
+                        class="font-semibold text-red-600"
+                    >
+                    {{ metrics.failed_jobs }}
+                </span>
+
+                </div>
+
+                <div class="flex items-center justify-between">
+
+                <span class="text-gray-500">
+                    Total
+                </span>
+
+                    <span class="font-semibold">
+                    {{ metrics.jobs_processed }}
+                </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="
+        lg:col-span-2
+        flex
+        items-center
+    ">
+
+            <JobsActivityChart
+
+                :completed="metrics.completed_jobs"
+
+                :failed="metrics.failed_jobs"
+            />
+
+        </div>
+
+    </div>
 
         <div class="bg-white rounded-xl shadow mt-6 p-6">
             <h2 class="text-xl font-bold mb-4">

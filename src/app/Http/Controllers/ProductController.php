@@ -250,10 +250,16 @@ class ProductController extends Controller
     public function show(Product $product): Response
     {
         $product->load([
-            'priceHistories',
+
+            'priceHistories' => fn ($query) =>
+
+            $query
+                ->latest('captured_at')
+                ->take(30),
         ]);
 
         return Inertia::render('products/Show', [
+
             'product' => $product,
         ]);
     }
