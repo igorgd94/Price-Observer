@@ -7,7 +7,13 @@ use App\Http\Controllers\{
     JobController,
     MetricsController,
     ProductController,
+    PrometheusMetricsController,
 };
+
+Route::get(
+    '/metrics/prometheus',
+    [PrometheusMetricsController::class, 'index']
+);
 
 Route::get('/cache', [CacheController::class, 'index'])
     ->name('cache.index');
