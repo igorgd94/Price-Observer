@@ -75,10 +75,6 @@
                     {
                       "color": "green",
                       "value": 0
-                    },
-                    {
-                      "color": "red",
-                      "value": 80
                     }
                   ]
                 }
@@ -159,10 +155,6 @@
                     {
                       "color": "green",
                       "value": 0
-                    },
-                    {
-                      "color": "red",
-                      "value": 80
                     }
                   ]
                 }
@@ -319,63 +311,22 @@
               {
                 "kind": "PanelQuery",
                 "spec": {
-                  "hidden": true,
-                  "query": {
-                    "datasource": {
-                      "name": "bfmzk4lztdwqob"
-                    },
-                    "group": "prometheus",
-                    "kind": "DataQuery",
-                    "spec": {
-                      "editorMode": "builder",
-                      "expr": "app_jobs_completed_total",
-                      "legendFormat": "__auto",
-                      "range": true
-                    },
-                    "version": "v0"
-                  },
-                  "refId": "A"
-                }
-              },
-              {
-                "kind": "PanelQuery",
-                "spec": {
-                  "hidden": true,
-                  "query": {
-                    "datasource": {
-                      "name": "bfmzk4lztdwqob"
-                    },
-                    "group": "prometheus",
-                    "kind": "DataQuery",
-                    "spec": {
-                      "editorMode": "builder",
-                      "expr": "app_jobs_failed_total",
-                      "instant": false,
-                      "legendFormat": "__auto",
-                      "range": true
-                    },
-                    "version": "v0"
-                  },
-                  "refId": "C"
-                }
-              },
-              {
-                "kind": "PanelQuery",
-                "spec": {
                   "hidden": false,
                   "query": {
                     "datasource": {
-                      "name": "__expr__"
+                      "name": "bfmzk4lztdwqob"
                     },
-                    "group": "__expr__",
+                    "group": "prometheus",
                     "kind": "DataQuery",
                     "spec": {
-                      "expression": "($C/($C+$A)) * 100",
-                      "type": "math"
+                      "editorMode": "code",
+                      "expr": "(\r\n  app_jobs_failed_total\r\n/\r\n(\r\n  app_jobs_failed_total\r\n+\r\n  app_jobs_completed_total\r\n)\r\n) * 100",
+                      "legendFormat": "__auto",
+                      "range": true
                     },
                     "version": "v0"
                   },
-                  "refId": "B"
+                  "refId": "D"
                 }
               }
             ],
@@ -399,11 +350,15 @@
                 "max": 100,
                 "min": 0,
                 "thresholds": {
-                  "mode": "absolute",
+                  "mode": "percentage",
                   "steps": [
                     {
                       "color": "green",
                       "value": 0
+                    },
+                    {
+                      "color": "#EAB839",
+                      "value": 30
                     },
                     {
                       "color": "red",
@@ -520,7 +475,7 @@
   "preload": false,
   "tags": [],
   "timeSettings": {
-    "autoRefresh": "30s",
+    "autoRefresh": "5s",
     "autoRefreshIntervals": [
       "5s",
       "10s",
@@ -534,7 +489,7 @@
       "1d"
     ],
     "fiscalYearStartMonth": 0,
-    "from": "now-6h",
+    "from": "now-5m",
     "hideTimepicker": false,
     "timezone": "browser",
     "to": "now"

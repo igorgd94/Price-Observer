@@ -95,10 +95,6 @@
                     {
                       "color": "green",
                       "value": 0
-                    },
-                    {
-                      "color": "red",
-                      "value": 80
                     }
                   ]
                 }
@@ -213,10 +209,6 @@
                     {
                       "color": "green",
                       "value": 0
-                    },
-                    {
-                      "color": "red",
-                      "value": 80
                     }
                   ]
                 }
@@ -331,10 +323,6 @@
                     {
                       "color": "green",
                       "value": 0
-                    },
-                    {
-                      "color": "red",
-                      "value": 80
                     }
                   ]
                 }
@@ -415,10 +403,6 @@
                     {
                       "color": "green",
                       "value": 0
-                    },
-                    {
-                      "color": "red",
-                      "value": 80
                     }
                   ]
                 }
@@ -494,15 +478,11 @@
                   "mode": "thresholds"
                 },
                 "thresholds": {
-                  "mode": "absolute",
+                  "mode": "percentage",
                   "steps": [
                     {
                       "color": "green",
                       "value": 0
-                    },
-                    {
-                      "color": "red",
-                      "value": 80
                     }
                   ]
                 }
@@ -583,10 +563,6 @@
                     {
                       "color": "green",
                       "value": 0
-                    },
-                    {
-                      "color": "red",
-                      "value": 80
                     }
                   ]
                 }
@@ -714,7 +690,7 @@
   "preload": false,
   "tags": [],
   "timeSettings": {
-    "autoRefresh": "10s",
+    "autoRefresh": "5s",
     "autoRefreshIntervals": [
       "5s",
       "10s",
@@ -728,10 +704,10 @@
       "1d"
     ],
     "fiscalYearStartMonth": 0,
-    "from": "2026-05-24T08:00:13.361Z",
+    "from": "now-5m",
     "hideTimepicker": false,
     "timezone": "browser",
-    "to": "2026-05-24T14:00:13.361Z"
+    "to": "now"
   },
   "title": "Application Overview",
   "variables": []
