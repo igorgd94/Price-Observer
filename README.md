@@ -167,10 +167,15 @@ docker compose exec app npm run dev
 
 # Services
 
-Application	http://localhost:8080
+
+Application	http://localhost:8080/dashboard
+
 Horizon	http://localhost:8080/horizon
+
 Prometheus	http://localhost:9090
+
 Grafana	http://localhost:3000
+
 
 # Project Goals
 
