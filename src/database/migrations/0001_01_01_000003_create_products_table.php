@@ -15,8 +15,9 @@ return new class extends Migration
             $table->id();
 
             $table->foreignId('user_id')
+                ->nullable()
                 ->constrained()
-                ->cascadeOnDelete();
+                ->nullOnDelete();
 
             $table->string('name');
 

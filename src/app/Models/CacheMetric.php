@@ -15,9 +15,6 @@ use Illuminate\Database\Eloquent\Model;
 ])]
 class CacheMetric extends Model
 {
-    /** @use HasFactory<CacheMetricFactory> */
-    use HasFactory;
-
     protected function casts(): array
     {
         return [
